@@ -1,18 +1,32 @@
 import Head from 'next/head'
+import { useState, useCallback, useMemo } from 'react'
 import Hero from '@/components/Hero'
 import SolutionsGrid, { type Solution } from '@/components/SolutionsGrid'
 import Footer from '@/components/Footer'
 import Sidebar from '@/components/Sidebar'
 import Header from '@/components/Header'
+import FloatingParticles from '@/components/FloatingParticles'
+import DigitalIDPage from '@/components/digital-ids/DigitalIDPage'
+import WalletContextProvider from '@/components/digital-ids/WalletProvider'
 
 export default function HomePage() {
-  // Simple demo handlers - no external calls
-  const notify = (message: string) => () => {
+  const [currentPage, setCurrentPage] = useState<'home' | 'digital-ids'>('home')
+  
+  // Memoize handlers to prevent unnecessary re-renders
+  const notify = useCallback((message: string) => () => {
     // eslint-disable-next-line no-alert
     alert(message)
-  }
+  }, [])
 
-  const solutions: Solution[] = [
+  const handleDigitalIDClick = useCallback(() => {
+    setCurrentPage('digital-ids')
+  }, [])
+
+  const handleNavigateHome = useCallback(() => {
+    setCurrentPage('home')
+  }, [])
+
+  const solutions = useMemo<Solution[]>(() => [
     {
       id: 'digital-ids',
       title: 'Time-limited Digital IDs',
@@ -20,7 +34,7 @@ export default function HomePage() {
       ctaLabel: 'Create ID',
       ariaLabel: 'Create a time-limited digital ID',
       icon: '🪪',
-      onPrimary: notify('Creating a time-limited digital ID... (demo)'),
+      onPrimary: handleDigitalIDClick,
       onSecondary: notify('Learn more: Time-limited Digital IDs'),
       imageUrl: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop',
     },
@@ -123,7 +137,7 @@ export default function HomePage() {
       onSecondary: notify('Learn more: Real-time Heatmaps & Dashboards'),
       imageUrl: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=800&auto=format&fit=crop',
     },
-  ]
+  ], [handleDigitalIDClick])
 
   return (
     <>
@@ -136,18 +150,48 @@ export default function HomePage() {
         <meta property="og:type" content="website" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-        <Sidebar solutions={solutions.map(({ id, title, icon }) => ({ id, label: shortLabel(title), icon }))} />
-        <Header />
-        <main id="top" className="lg:pl-80">
-          {/* Decorative gradient blobs */}
-          <div aria-hidden className="pointer-events-none fixed inset-x-0 top-[-10rem] -z-10 blur-3xl">
-            <div className="relative left-1/2 aspect-[1155/678] w-[72rem] -translate-x-1/2 bg-[radial-gradient(closest-side,_#22d3ee_30%,_transparent_40%)] opacity-30 dark:opacity-20" />
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Enhanced background with multiple gradient layers */}
+        <div key="bg-gradient-1" className="fixed inset-0 bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950"></div>
+        <div key="bg-gradient-2" className="fixed inset-0 bg-gradient-to-tl from-cyan-950/30 via-transparent to-purple-950/30"></div>
+        
+        {/* Floating particles background */}
+        <FloatingParticles key="particles" />
+        
+        {/* Animated gradient orbs */}
+        <div key="gradient-orbs" aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+        </div>
+        
+        <WalletContextProvider key="wallet-provider">
+          <div key="main-content" className="relative z-10 text-white">
+            <Sidebar 
+              key="sidebar"
+              solutions={solutions.map(({ id, title, icon }: Solution) => ({ 
+                id, 
+                label: shortLabel(title), 
+                icon,
+                onClick: id === 'digital-ids' ? handleDigitalIDClick : undefined
+              }))} 
+              currentPage={currentPage}
+              onNavigateHome={handleNavigateHome}
+            />
+            <Header key="header" />
+            <main id="top" className="lg:pl-80">
+              {currentPage === 'home' ? (
+                <div key="home">
+                  <Hero onPrimaryCta={notify('Exploring solutions... (demo)')} onSecondaryCta={notify('Jumping to solutions... (demo)')} />
+                  <SolutionsGrid solutions={solutions} />
+                  <Footer />
+                </div>
+              ) : currentPage === 'digital-ids' ? (
+                <DigitalIDPage key="digital-ids" />
+              ) : null}
+            </main>
           </div>
-          <Hero onPrimaryCta={notify('Exploring solutions... (demo)')} onSecondaryCta={notify('Jumping to solutions... (demo)')} />
-          <SolutionsGrid solutions={solutions} />
-          <Footer />
-        </main>
+        </WalletContextProvider>
       </div>
     </>
   )
@@ -168,5 +212,6 @@ function shortLabel(title: string): string {
   }
   return map[title] ?? title
 }
+
 
 

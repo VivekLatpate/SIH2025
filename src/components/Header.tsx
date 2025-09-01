@@ -13,7 +13,7 @@ export default function Header() {
   }, [])
 
   return (
-    <header className={`sticky top-0 z-50 ${isAtTop ? 'bg-slate-950/40' : 'bg-slate-950/70'} backdrop-blur border-b border-white/10 lg:pl-80`}>
+    <header className={`sticky top-0 z-50 ${isAtTop ? 'glass' : 'glass-strong'} border-b border-white/10 lg:pl-80`}>
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
         <Link href="#top" className="flex items-center gap-3">
           <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-teal-500 via-sky-500 to-indigo-500 text-white font-bold shadow">S</span>
