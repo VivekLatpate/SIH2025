@@ -1,0 +1,27 @@
+/* CSS variables for light and dark themes */
+:root {
+  --color-brand: #1b9aaa; /* teal-blue */
+  --color-on-brand: #ffffff;
+  --color-surface: #ffffff;
+  --color-text: #0b132b; /* deep navy */
+  --color-muted: #6b7280; /* gray-500 */
+
+  --ring-offset: 3px;
+
+  /* Additional surfaces and accents */
+  --color-surface-2: #f8fafc; /* slate-50 */
+  --color-accent: #7c3aed; /* violet-600 */
+}
+
+.dark {
+  --color-brand: #14b8a6; /* teal */
+  --color-on-brand: #081018;
+  --color-surface: #0b132b; /* deep navy */
+  --color-text: #e5e7eb; /* gray-200 */
+  --color-muted: #94a3b8; /* slate-400 */
+
+  --color-surface-2: #0f172a; /* slate-900 */
+  --color-accent: #a78bfa; /* violet-400 */
+}
+
+
