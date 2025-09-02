@@ -1,0 +1,31 @@
+{
+  "name": "emergency-alert-backend",
+  "version": "1.0.0",
+  "description": "Backend service for listening to emergency alert events from Solana program",
+  "main": "solana-emergency-listener.js",
+  "scripts": {
+    "start": "node solana-emergency-listener.js",
+    "start-eth": "node emergency-listener.js",
+    "dev": "nodemon solana-emergency-listener.js",
+    "dev-eth": "nodemon emergency-listener.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.87.6",
+    "@coral-xyz/anchor": "^0.30.1",
+    "ethers": "^6.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "blockchain",
+    "solana",
+    "ethereum",
+    "emergency",
+    "alerts",
+    "tourist-safety"
+  ],
+  "author": "Smart Tourist Safety",
+  "license": "MIT"
+}
